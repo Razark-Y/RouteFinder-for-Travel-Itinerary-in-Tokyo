@@ -22,7 +22,7 @@ locations_name = ["Haneda Airport", "Hachikō Memorial Statue", "Tokyo Skytree",
                    "Shibuya Scramble Crossing", "Chidorigafuchi Moat",
                    "Rainbow Bridge", "Yasukuni Jinja", "Tokyo Station"]
 
-graph_file_path = 'graph.pkl'
+graph_file_path = '../graph.pkl'
 def initialize_or_load_graph(coordinates, locations_name, api_key, graph_file_path):
     if os.path.exists(graph_file_path):
         with open(graph_file_path, 'rb') as file:
@@ -146,20 +146,24 @@ def print_route(route):
     print(f"[{route[-1]}]")
 
 graph = initialize_or_load_graph(coordinates, locations_name, api_key, graph_file_path)
-tokyo_station_response = input("Do you want to make Tokyo Station the final destination or a stop on the route? Enter 'final' for final destination or 'stop' for a stop on the route: ")
-if tokyo_station_response.lower() == 'final':
-    route, time = find_route(graph, "Haneda Airport", end="Tokyo Station")
-    print_route(route)
-    print("Total Time (hours):", time)  
-elif tokyo_station_response.lower() == 'stop':
-    route, time = find_route(graph, "Haneda Airport")
-    if "Tokyo Station" not in route:
-        print("Please make sure to have tokyo inside the list of destination!")
-    else:
+while True:
+    tokyo_station_response = input("Do you want to make Tokyo Station the final destination or a stop on the route? Enter 'final' for final destination or 'stop' for a stop on the route: ")
+    if tokyo_station_response.lower() == 'final':
+        route, time = find_route(graph, "Haneda Airport", end="Tokyo Station")
         print_route(route)
-        print("Total Time (hours):", time) 
-else:
-    print("Invalid input. Please enter 'final' or 'stop'.")
+        print("Total Time (hours):", time)  
+        break
+    elif tokyo_station_response.lower() == 'stop':
+        route, time = find_route(graph, "Haneda Airport")
+        if "Tokyo Station" not in route:
+            print("Please make sure to have tokyo inside the list of destination!")
+            break
+        else:
+            print_route(route)
+            print("Total Time (hours):", time) 
+            break
+    else:
+        print("Invalid input. Please enter 'final' or 'stop'.")
 
 while True:
     map_response = input("Do you want to display the route map? (yes/no): ")
